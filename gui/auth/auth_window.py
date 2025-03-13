@@ -1,11 +1,9 @@
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QPushButton, QLineEdit, QLabel
 )
-from firebase_admin.auth import EmailAlreadyExistsError
-from requests import HTTPError
 
-from core.user.auth import user_register, user_login
-from gui.home.home import DashboardWindow
+from core.user.usecases import register, login
+from gui.home.home_window import HomeWindow
 
 
 class MainWindow(QWidget):
@@ -51,38 +49,26 @@ class MainWindow(QWidget):
         self.message_label.setStyleSheet(f"background-color: {color}; color: white; padding: 5px; border-radius: 5px;")
 
     def register(self):
-        email = self.input_email.text()
-        password = self.input_password.text()
-        try:
-            user = user_register(email, password)
-            if user:
-                self.show_message("✅ Usuário registrado com sucesso!", "green")
-        except EmailAlreadyExistsError as exc:
-            self.show_message(f"❌ O email informado já está cadastrado", "red")
-        except ValueError as e:
-            message = "❌ Email inválido" if "email" in str(e) \
-                      else "❌ Senha inválida"
-            self.show_message(f"❌ Erro no cadastro: {message}", "red")
+        message, status = register(
+            email=self.input_email.text(),
+            password=self.input_password.text()
+        )
+        color = "green" if status else "red"
+        self.show_message(f"{message}", color)
 
     def login(self):
-        email = self.input_email.text()
-        password = self.input_password.text()
-        try:
-            user = user_login(email, password)
-            if user:
-                self.show_message("✅ Login realizado com sucesso! Redirecionando...", "green")
-                self.open_home()
-        except HTTPError as e:
-            print(type(e.strerror))
-            message = f"❌ dados de login inválidos" \
-                      if "INVALID_LOGIN_CREDENTIALS" in e.strerror or "INVALID_EMAIL" in e.strerror or "INVALID_PASSWORD" in e.strerror \
-                      else f"❌ Erro inesperado - {e.strerror}"
-
-            self.show_message(f"❌ Erro no login: {message}", "red")
+        message, status = login(
+            email=self.input_email.text(),
+            password=self.input_password.text()
+        )
+        if status:
+            self.open_home()
+        else:
+            self.show_message(f"{message}", "red")
 
     def open_home(self):
         """ Abre o dashboard e esconde a tela de login """
-        self.home = DashboardWindow(self.logout)
+        self.home = HomeWindow(self.logout)
         self.home.show()
         self.hide()  # Esconde a tela de login
 

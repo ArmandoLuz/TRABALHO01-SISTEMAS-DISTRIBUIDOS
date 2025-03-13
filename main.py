@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QApplication
-from gui.auth.main_window import MainWindow
+from gui.auth.auth_window import MainWindow
 
 if __name__ == "__main__":
     app = QApplication([])

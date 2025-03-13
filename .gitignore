@@ -1,0 +1,5 @@
+core/book/__pycache__/
+core/user/__pycache__/
+core/auth/__pycache__/
+core/home/__pycache__/
+.idea/
