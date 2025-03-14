@@ -3,6 +3,15 @@ from firebase_admin import credentials
 import pyrebase
 import os
 from dotenv import load_dotenv
+import zipfile
+
+# Caminho para o arquivo ZIP e para a pasta onde será extraído
+path_zip_config = "./firebase/firebase_config.zip"
+destiny = "./firebase"
+
+# Abrir e extrair
+with zipfile.ZipFile(path_zip_config, "r") as zip_ref:
+    zip_ref.extractall(destiny)
 
 # Obtém o caminho absoluto do diretório do script atual
 base_dir = os.path.dirname(os.path.abspath(__file__))

@@ -3,7 +3,6 @@ from requests import HTTPError
 
 from core.user.repositories import user_register, user_login
 
-
 def register(email: str, password: str) -> tuple[str, bool] | None:
     """Registra um novo usuário no Firebase."""
     try:
