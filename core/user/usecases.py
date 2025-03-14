@@ -15,6 +15,8 @@ def register(email: str, password: str) -> tuple[str, bool] | None:
     except ValueError as e:
         return ("❌ Email inválido" if "email" in str(e) \
             else "❌ Senha inválida", False)
+    except Exception:
+        return "❌ Erro de conexão com o servidor", False
 
 def login(email: str, password: str) -> tuple[str, bool] | None:
     try:
